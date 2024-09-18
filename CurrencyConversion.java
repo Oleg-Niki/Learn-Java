@@ -6,13 +6,21 @@
 public class CurrencyConversion {
     private static final double BITCOIN_TO_DOLLAR_RATE = 60000.0; // Example conversion rate
 
-    // Method to convert Bitcoin to Dollar
+/**
+* // Method to convert Bitcoin to Dollar.
+* @param amount in Dollar
+* @return amount in Bitcoin
+*/
+    
     public static double Bitcoin2Dollar(double amountInBitcoin) {
         return amountInBitcoin * BITCOIN_TO_DOLLAR_RATE;
     }
 
-    // Method to convert Dollar to Bitcoin
-    public static double Dollar2Bitcoin(double amountInDollar) {
+/**
+* // Method to convert Dollar to Bitcoin.
+* @param amount in Bitcoin
+* @return amount in Dollar
+*/    public static double Dollar2Bitcoin(double amountInDollar) {
         return amountInDollar / BITCOIN_TO_DOLLAR_RATE;
     }
 
