@@ -3,8 +3,6 @@
 * @author [write one partner name here]
 * @author [write the other partner name here]
 */
- @since 09/17/2024
- */
 public class CurrencyConversion {
     private static final double BITCOIN_TO_DOLLAR_RATE = 60000.0; // Example conversion rate
 
