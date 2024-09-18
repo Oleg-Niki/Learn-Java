@@ -1,7 +1,8 @@
 /**
- Partner Lab1
- Description: [Currency conversion from Bitcoin to Dollar and back]
- @author Oleg and Leilani
+* Lab 1: [CurrencyConversion BITCOIN => DOLLAR]
+* @author [write one partner name here]
+* @author [write the other partner name here]
+*/
  @since 09/17/2024
  */
 public class CurrencyConversion {
