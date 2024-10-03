@@ -35,14 +35,7 @@
         return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
     }
 
-    public static void main(String[] args) {
-        System.out.println("isPalindrome Test:");
-        System.out.println(isPalindrome("Racecar")); // true
-        System.out.println(isPalindrome("hello"));   // false
 
-        System.out.println("isAbecedarian Test:");
-        System.out.println(isAbecedarian("almost")); // true
-        System.out.println(isAbecedarian("hello"));  // false
 
         System.out.println("isPangram Test:");
         System.out.println(isPangram("The quick brown fox jumps over the lazy dog")); // true
