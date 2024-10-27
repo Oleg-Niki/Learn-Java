@@ -1,3 +1,7 @@
 public class BankAccount {
-  asgkjhsdhspio
+  private double balance;
+
+  public BankAccount(){
+    balance = 0.0;
+  }
 }
