@@ -4,7 +4,7 @@
  @author: Oleg Nikitashin
  @since: 08/29/2024
  */
-public class Time {
+public class Homework3A {
     public static void main(String[] args) {
         // Ensure that exactly three arguments are provided
         if (args.length != 3) {

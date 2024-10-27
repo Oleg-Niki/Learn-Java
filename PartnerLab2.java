@@ -5,7 +5,7 @@
  * @author Gerardo Calle (isPalindrome and isAbecedarian)
  * @author Oleg Nikitashin (isPangram and capitalizeFirstLetter)
  */
-public class Antics {
+public class PartnerLab2 {
     /**
      * Checks if a given string is a palindrome.
      *

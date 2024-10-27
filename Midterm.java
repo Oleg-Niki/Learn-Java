@@ -5,7 +5,7 @@
 import java.util.Random;
 import java.util.Arrays;
 
-public class Main {
+public class Midterm {
 
     // Main method: DO NOT CHANGE
     public static void main(String[] args) {

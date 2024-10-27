@@ -6,7 +6,7 @@
 */
 import java.util.Scanner;
 
-public class CurrencyConversion {
+public class PartnerLab1 {
     private static final double BITCOIN_TO_DOLLAR_RATE = 60000.0; // Example conversion rate
 
     /**

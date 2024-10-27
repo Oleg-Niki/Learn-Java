@@ -9,7 +9,7 @@ import java.util.Scanner;
  * @author Ryan
  * @author Oleg
  */
-public class Main {
+public class PartnerLab3 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();

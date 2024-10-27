@@ -1,4 +1,4 @@
-public class Main {
+public class Homework5 {
     public static void main(String[] args) {
         drawPic(args[0]);
     }

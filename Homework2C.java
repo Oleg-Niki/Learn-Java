@@ -2,7 +2,7 @@
  @author: Oleg Nikitashin
  @since: 08/25/24
  */
-public class Hello {
+public class Homework2C {
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Hello World! Please write a name as a command-line argument.");
