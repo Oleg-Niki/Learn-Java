@@ -22,4 +22,7 @@ public class BankAccount {
   void withdraw(double amount){ //here for example we should check that we can't withdraw amount greater than we have
     balance -= amount;
   }
+  void printStatement(){
+
+  }
 }
