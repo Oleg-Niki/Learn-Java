@@ -1,12 +1,17 @@
-  public static void main(String[] args) {
-        ComplexNumber num1 = new ComplexNumber(2, 3);
-        ComplexNumber num2 = new ComplexNumber(1, -2);
-
-        System.out.println("Number 1: " + num1);
-        System.out.println("Number 2: " + num2);
-
-        System.out.println("Addition: " + num1.add(num2));
-        System.out.println("Subtraction: " + num1.subtract(num2));
-        System.out.println("Multiplication: " + num1.multiply(num2));
-        System.out.println("Division: " + num1.divide(num2));
+public class Main {
+    /**
+     * *The starting point
+     * @param args
+     */
+    public static void main(String[] args) {
+        System.out.println("Hello world!");
+        ComplexNumber a = new ComplexNumber(1,3);
+        ComplexNumber b = new ComplexNumber(2,3);
+        a.update(4,5);
+        System.out.println("a = " + a);
+        System.out.println("b = " + b);
+        System.out.println("a + b = " + a.add(b));
+        System.out.println("a * b = " + a.multiply(b));
+        System.out.println("a % b = " + a.divide(b));
     }
+}
