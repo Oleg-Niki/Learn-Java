@@ -37,6 +37,12 @@ public class Application {
         switch (option) {
             case 1:
                 System.out.println("For deposit enter amount in dollars: ");
+                double depositAmount = scanner.nextDouble();
+                if (depositAmount < 0) {
+                    System.out.println("Cannot be negative number.");
+                }
+                System.out.println("Your amount for depositing: " + depositAmount);
+
 
                 break;
 
