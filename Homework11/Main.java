@@ -13,5 +13,6 @@ public class Main {
         System.out.println("a + b = " + a.add(b));
         System.out.println("a * b = " + a.multiply(b));
         System.out.println("a % b = " + a.divide(b));
+        System.out.println("a - b = " + a.subtract(b));
     }
 }
