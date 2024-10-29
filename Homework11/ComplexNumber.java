@@ -1,25 +1,16 @@
-package Homework11;
-
 public class ComplexNumber {
 
-    private double real; // Real part of the complex number
+    private double real;
 
-    private double imag; // Imaginary part of the complex number
+    private double imag;
 
-    // Constructor to initialize complex number
     public ComplexNumber(double r, double i){
         real = r;
         imag = i;
             }
-//            public String toString(){
-//               return String.format ("%.1f + %.1f i", this.real, this.imag);
-//            }
-    public String toString() {
-        if (imag >= 0)
-            return String.format("%.1f + %.1fi", real, imag);
-        else
-            return String.format("%.1f - %.1fi", real, -imag);
-}
+            public String toString(){
+               return String.format ("%.1f + %.1f i", this.real, this.imag);
+            }
             public void update(double r, double i){
         real = r;
         imag = i;
@@ -27,9 +18,6 @@ public class ComplexNumber {
             public ComplexNumber add(ComplexNumber other) {
         return new ComplexNumber(this.real + other.real, this.imag + other.imag);
             }
-        public ComplexNumber subtract(ComplexNumber other) {
-            return new ComplexNumber(this.real - other.real, this.imag - other.imag);
-    }
             public ComplexNumber multiply(ComplexNumber other) {
         double r = this.real * other.real + this.imag * other.imag * (-1);
         double i = this.real * other.imag + this.imag * other.real;
