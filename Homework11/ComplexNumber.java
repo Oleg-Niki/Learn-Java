@@ -32,4 +32,7 @@ public class ComplexNumber {
                 double imagPart = numerator.imag / (denominator.real);
                 return new ComplexNumber(realPart, imagPart);
             }
+            public ComplexNumber subtract(ComplexNumber other){
+                return new ComplexNumber( this.real - other.real,  this.imag - other.imag);
+
 }
