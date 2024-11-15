@@ -55,3 +55,40 @@ Button: For "View Statement".
 Button: Logout.
 _
 Set fx:id for each button (e.g., depositButton, withdrawButton, etc.)._
+
+
+**FOR CLOUD DATABASE:**
+Steps to Set Up Yugabyte Cloud
+Ensure Your Database Has a users Table Run the following SQL script to create the users table if it doesn't already exist:
+
+sql
+Copy code
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+Update Database Credentials Replace the placeholders in the code:
+
+<your-yugabyte-cloud-host>: Your YugabyteDB instance hostname.
+<your-database-name>: Name of the database.
+<your-username>: Your database username.
+<your-password>: Your database password.
+Using JDBC Driver
+Ensure your project has the PostgreSQL JDBC driver for connecting to YugabyteDB. Add this to your Maven pom.xml file:
+
+xml
+Copy code
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>42.6.0</version>
+</dependency>
+Test the Sign-Up Workflow
+Launch your app.
+Navigate to the sign-up screen.
+Fill out the username and password fields.
+Click the "Sign Up" button.
+If the user is created successfully, you'll see a success alert.
+The new user will be saved in your YugabyteDB users table.
+
