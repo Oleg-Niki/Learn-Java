@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" spacing="10.0" alignment="CENTER" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bankaccountapp.MainController">
+    <!-- VBox properties adjusted:
+         - prefHeight and prefWidth reduced for smaller size
+         - spacing added for better spacing between elements
+         - alignment set to CENTER to center all child elements -->
+    <children>
+        <MenuBar>
+            <menus>
+                <!-- File Menu -->
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Close" onAction="#handleClose" />
+                    </items>
+                </Menu>
+
+                <!-- Edit Menu -->
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Delete Account" onAction="#handleDeleteAccount" />
+                    </items>
+                </Menu>
+
+                <!-- Help Menu -->
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About" onAction="#handleAbout" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+
+        <!-- Centered Label with style -->
+        <Label fx:id="welcomeUserField" text="Welcome, [Username]" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-alignment: center;" />
+
+        <!-- Deposit Button -->
+        <Button fx:id="depositButton" mnemonicParsing="false" text="Deposit" onAction="#handleDeposit"
+                prefWidth="200.0" style="-fx-font-size: 14px;" />
+
+        <!-- Withdraw Button -->
+        <Button fx:id="withdrawButton" mnemonicParsing="false" text="Withdraw" onAction="#handleWithdraw"
+                prefWidth="150.0" style="-fx-font-size: 14px;" />
+
+        <!-- View Statement Button (smaller and centered) -->
+        <Button fx:id="statementButton" mnemonicParsing="false" text="View Statement" onAction="#handleStatement"
+                prefWidth="250.0" style="-fx-font-size: 14px;" />
+
+        <!-- Logout Button (aligned to the bottom using VBox spacing) -->
+        <Button fx:id="logoutButton" mnemonicParsing="false" text="Logout" onAction="#handleLogout"
+                prefWidth="100.0" style="-fx-font-size: 12px; -fx-background-color: red; -fx-text-fill: white;" />
+    </children>
+</VBox>
