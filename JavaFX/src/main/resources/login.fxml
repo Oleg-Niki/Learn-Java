@@ -1,19 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="450.0" spacing="15.0" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #f4f4f9; -fx-border-color: #d3d3d3; -fx-border-width: 2; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bankaccountapp.LoginController">
+   <!-- VBox style changes:
+        - Reduced window size with prefHeight and prefWidth.
+        - Added spacing between elements using spacing="15.0".
+        - Centered all children with alignment="CENTER".
+        - Added padding around the VBox using -fx-padding.
+        - Added a light background color and border for aesthetics. -->
+
    <children>
-      <Label id="loginToAccount" text="Login to Your Account" />
-      <TextField id="usernameField" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="472.0" text="Enter your login (Account Number)" />
-      <PasswordField id="passwordField" mouseTransparent="true" promptText="Enter password" text="Password" />
-      <Button id="loginButton" mnemonicParsing="false" text="Login" />
-      <Hyperlink id="signupLink" text="Sign Up" />
+      <!-- Title Label -->
+      <Label fx:id="loginToAccount" text="Login to Your Account" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" />
+      <!-- Styling for Label:
+           - Increased font size and weight for emphasis.
+           - Set text color to a darker shade for readability. -->
+
+      <!-- Username TextField -->
+      <TextField fx:id="usernameField" promptText="Enter your Account Number" prefHeight="35.0" prefWidth="300.0" style="-fx-font-size: 14px; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 5;" />
+      <!-- Styling for TextField:
+           - Added a promptText instead of setting default text for usability.
+           - Adjusted height and width for a consistent appearance.
+           - Styled with a border and padding for a modern look. -->
+
+      <!-- PasswordField -->
+      <PasswordField fx:id="passwordField" promptText="Enter your password" prefHeight="35.0" prefWidth="300.0" style="-fx-font-size: 14px; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 5;" />
+      <!-- Similar styling as TextField for visual consistency. -->
+
+      <!-- Login Button -->
+      <Button fx:id="loginButton" mnemonicParsing="false" text="Login" onAction="#handleLogin" style="-fx-font-size: 14px; -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;" />
+      <!-- Styling for Button:
+           - Green background color for emphasis (primary action).
+           - White text for contrast.
+           - Rounded corners and padding for a polished look. -->
+
+      <!-- Sign Up Button -->
+      <Button fx:id="signupButton" text="Sign Up" onAction="#handleSignUp" style="-fx-font-size: 14px; -fx-background-color: #2196F3; -fx-text-fill: white; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;" />
+      <!-- Styling for secondary action:
+           - Blue background for contrast with the primary button.
+           - Same padding and rounded corners for consistency. -->
+
+      <!-- Exit Button -->
+      <Button fx:id="exitButton" text="Exit" onAction="#handleExit" style="-fx-font-size: 14px; -fx-background-color: #F44336; -fx-text-fill: white; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;" />
+      <!-- Styling for Exit Button:
+           - Red background to indicate a destructive action.
+           - Consistent padding and rounded corners. -->
    </children>
 </VBox>
