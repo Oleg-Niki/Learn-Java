@@ -1,0 +1,47 @@
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Button?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bankaccountapp.SignUpController" spacing="15" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #f4f4f9; -fx-border-color: #d3d3d3; -fx-border-width: 2; -fx-border-radius: 10;">
+    <!-- VBox style:
+         - spacing="15": Provides space between elements for better readability.
+         - alignment="CENTER": Centers all child elements horizontally and vertically.
+         - padding: Adds internal padding for aesthetics.
+         - background-color: Adds a light gray background for a welcoming appearance.
+         - border-color: Light border for subtle emphasis. -->
+
+    <!-- Title Label -->
+    <Label text="Welcome to Sign Up!" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #333333;" />
+    <!-- Styling:
+         - Larger font size for emphasis.
+         - Bold font for better hierarchy.
+         - Darker text color for readability. -->
+
+    <!-- Username Field -->
+    <TextField fx:id="usernameField" promptText="Enter Your Username" prefWidth="300" style="-fx-font-size: 14px; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 5;" />
+    <!-- Styling:
+         - promptText for placeholders, providing user guidance.
+         - Adjusted width and font size for usability.
+         - Rounded corners and subtle border color for a modern look. -->
+
+    <!-- Password Field -->
+    <PasswordField fx:id="passwordField" promptText="Enter a Secure Password" prefWidth="300" style="-fx-font-size: 14px; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 5;" />
+    <!-- Similar styling as TextField for visual consistency. -->
+
+    <!-- Deposit Field -->
+    <TextField fx:id="depositField" promptText="Enter Initial Deposit" prefWidth="300" style="-fx-font-size: 14px; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 5;" />
+    <!-- Styled to match the username and password fields. -->
+
+    <!-- Buttons in HBox -->
+    <HBox spacing="15" alignment="CENTER">
+        <!-- Styling for Buttons -->
+        <Button fx:id="signUpButton" text="Sign Up" onAction="#handleSignUp" style="-fx-font-size: 14px; -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;" />
+        <!-- Green background for primary action. -->
+
+        <Button fx:id="cancelButton" text="Cancel" onAction="#handleCancel" style="-fx-font-size: 14px; -fx-background-color: #F44336; -fx-text-fill: white; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;" />
+        <!-- Red background for secondary/cancel action. -->
+    </HBox>
+</VBox>
+
