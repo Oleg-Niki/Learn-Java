@@ -12,12 +12,10 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -46,6 +44,7 @@ public class HangmanGame extends Application {
         layout.setStyle("-fx-background-color: lightblue;");
 
         Label nameLabel = new Label("Enter your name:");
+        nameLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
         TextField nameField = new TextField();
         Button submitButton = new Button("Submit");
 
@@ -73,8 +72,10 @@ public class HangmanGame extends Application {
     private void showTopicSelection(Stage primaryStage) {
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(10));
+        layout.setStyle("-fx-background-color: lightcoral;");
 
         Label topicLabel = new Label("Choose a topic:");
+        topicLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
         Button programmingButton = new Button("Programming");
         Button carsButton = new Button("Cars");
         Button physicsButton = new Button("Physics");
@@ -117,9 +118,10 @@ public class HangmanGame extends Application {
         drawingPane.setPrefSize(400, 300);
 
         wordLabel = new Label(createWordDisplay());
-        wordLabel.setStyle("-fx-font-size: 20px;");
+        wordLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         promptLabel = new Label("Guess a letter!");
-        promptLabel.setStyle("-fx-font-size: 16px;");
+        promptLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        promptLabel.setTextFill(Color.DARKBLUE);
 
         VBox topLayout = new VBox(10, promptLabel, wordLabel);
         topLayout.setPadding(new Insets(10));
@@ -149,11 +151,10 @@ public class HangmanGame extends Application {
         inputBox.setPadding(new Insets(10));
         layout.setBottom(inputBox);
 
-        Scene scene = new Scene(layout, 400, 400);
+        Scene scene = new Scene(layout, 500, 500);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
 
     // Handle Player's Guess
     private void handleGuess(String guess) {
@@ -188,35 +189,54 @@ public class HangmanGame extends Application {
         }
     }
 
-    // Display Game Over Message with Restart Option
+    // Display Game Over Message with Results
     private void showGameOver(String message) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Game Over");
-        alert.setHeaderText(message);
-        alert.setContentText("Would you like to play again?");
+        // Fetch leaderboard from the database
+        List<String> leaderboard = dbConnector.getLeaderboard();
 
-        ButtonType restartButton = new ButtonType("Restart");
-        ButtonType exitButton = new ButtonType("Exit", ButtonBar.ButtonData.CANCEL_CLOSE);
+        // Create a popup window to display the leaderboard
+        Stage popupStage = new Stage();
+        VBox popupLayout = new VBox(10);
+        popupLayout.setPadding(new Insets(20));
+        popupLayout.setStyle("-fx-background-color: lightgoldenrodyellow;");
 
-        alert.getButtonTypes().setAll(restartButton, exitButton);
+        Label header = new Label(message);
+        header.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        header.setTextFill(Color.DARKRED);
 
-        alert.showAndWait().ifPresent(response -> {
-            if (response == restartButton) {
-                restartGame();
-            } else {
-                System.exit(0); // Exit the game
-            }
+        Label leaderboardTitle = new Label("Top Players:");
+        leaderboardTitle.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+
+        VBox leaderboardBox = new VBox(5);
+        leaderboard.forEach(entry -> {
+            Label playerLabel = new Label(entry);
+            playerLabel.setFont(Font.font("Arial", 14));
+            leaderboardBox.getChildren().add(playerLabel);
         });
+
+        Button restartButton = new Button("Restart");
+        restartButton.setOnAction(e -> {
+            popupStage.close();
+            restartGame();
+        });
+
+        Button exitButton = new Button("Exit");
+        exitButton.setOnAction(e -> System.exit(0));
+
+        HBox buttonBox = new HBox(10, restartButton, exitButton);
+        popupLayout.getChildren().addAll(header, leaderboardTitle, leaderboardBox, buttonBox);
+
+        Scene popupScene = new Scene(popupLayout, 400, 400);
+        popupStage.setScene(popupScene);
+        popupStage.show();
     }
+
     // Restart the Game
     private void restartGame() {
-        // Reset the game state
         guessedLetters.clear();
         wrongGuesses = 0;
         selectedWord = null;
         topic = null;
-
-        // Show the username prompt again
         Stage primaryStage = (Stage) drawingPane.getScene().getWindow();
         showUserNamePrompt(primaryStage);
     }
@@ -252,40 +272,40 @@ public class HangmanGame extends Application {
     private String getRandomWord(String topic) {
         List<String> words;
         if ("programming".equals(topic)) {
-            words = Arrays.asList("array", "loops", "class");
+            words = List.of("array", "loops", "class");
         } else if ("cars".equals(topic)) {
-            words = Arrays.asList("tesla", "jaguar", "volvo");
+            words = List.of("tesla", "jaguar", "volvo");
         } else if ("physics".equals(topic)) {
-            words = Arrays.asList("force", "light", "atoms");
+            words = List.of("force", "light", "atoms");
         } else {
-            words = Arrays.asList("error");
+            words = List.of("error");
         }
         return words.get(new Random().nextInt(words.size()));
     }
 
     // Draw the Gallows
     private void drawGallows() {
-        Line base = new Line(50, 250, 150, 250); // Gallows base
-        Line post = new Line(100, 50, 100, 250); // Vertical post
-        Line beam = new Line(100, 50, 200, 50);  // Horizontal beam
-        Line rope = new Line(200, 50, 200, 80);  // Rope
+        Line base = new Line(50, 250, 150, 250);
+        Line post = new Line(100, 50, 100, 250);
+        Line beam = new Line(100, 50, 200, 50);
+        Line rope = new Line(200, 50, 200, 80);
         drawingPane.getChildren().addAll(base, post, beam, rope);
     }
 
     // Draw the Hanging Man Progressively
     private void drawNextBodyPart() {
         if (wrongGuesses == 0) {
-            drawingPane.getChildren().add(new Circle(200, 100, 20)); // Head
+            drawingPane.getChildren().add(new Circle(200, 100, 20));
         } else if (wrongGuesses == 1) {
-            drawingPane.getChildren().add(new Line(200, 120, 200, 180)); // Body
+            drawingPane.getChildren().add(new Line(200, 120, 200, 180));
         } else if (wrongGuesses == 2) {
-            drawingPane.getChildren().add(new Line(200, 140, 170, 120)); // Left arm
+            drawingPane.getChildren().add(new Line(200, 140, 170, 120));
         } else if (wrongGuesses == 3) {
-            drawingPane.getChildren().add(new Line(200, 140, 230, 120)); // Right arm
+            drawingPane.getChildren().add(new Line(200, 140, 230, 120));
         } else if (wrongGuesses == 4) {
-            drawingPane.getChildren().add(new Line(200, 180, 180, 220)); // Left leg
+            drawingPane.getChildren().add(new Line(200, 180, 180, 220));
         } else if (wrongGuesses == 5) {
-            drawingPane.getChildren().add(new Line(200, 180, 220, 220)); // Right leg
+            drawingPane.getChildren().add(new Line(200, 180, 220, 220));
         }
         wrongGuesses++;
     }
