@@ -19,17 +19,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class HangmanGame extends Application {
-    private String userName;
-    private String selectedWord;
-    private String topic;
-    private int wrongGuesses = 0;
+/**
+ * A Hangman game with JavaFX built in SDK 11 Amazon Corretto.
+ * Users can guess letters to discover a word based on a chosen topic.
+ * The game includes a graphical interface and leaderboard.
+ */
 
-    private Pane drawingPane;
-    private Label wordLabel;
-    private Label promptLabel;
-    private List<Character> guessedLetters = new ArrayList<>();
-    private DatabaseConnector dbConnector;
+public class HangmanGame extends Application {
+    private String userName; // Player's username
+    private String selectedWord; // The word to guess
+    private String topic; // Chosen topic for the word
+    private int wrongGuesses = 0; // Count of wrong guesses
+
+    private Pane drawingPane; // Pane for drawing the hangman
+    private Label wordLabel; // Label to display the guessed word
+    private Label promptLabel; // Label to prompt user actions
+    private List<Character> guessedLetters = new ArrayList<>(); // List of guessed letters
+    private DatabaseConnector dbConnector; // Database connector for saving results and fetching leaderboard
 
     @Override
     public void start(Stage primaryStage) {
@@ -37,7 +43,12 @@ public class HangmanGame extends Application {
         showUserNamePrompt(primaryStage);
     }
 
-    // Step 1: Prompt for User Name
+    /**
+     * Step 1: Displays a prompt to enter the user's name.
+     *
+     * @param primaryStage the primary stage for the JavaFX application
+     */
+
     private void showUserNamePrompt(Stage primaryStage) {
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(20));
@@ -63,12 +74,24 @@ public class HangmanGame extends Application {
         });
 
         layout.getChildren().addAll(nameLabel, nameField, submitButton);
+
+        // Add a fade-in transition for the layout
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), layout);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+
         Scene scene = new Scene(layout, 300, 200);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    // Step 2: Topic Selection Menu
+    /**
+     * Step 2: Displays the topic selection menu.
+     *
+     * @param primaryStage the primary stage for the JavaFX application
+     */
+
     private void showTopicSelection(Stage primaryStage) {
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(10));
@@ -104,11 +127,24 @@ public class HangmanGame extends Application {
         physicsButton.setOnAction(e -> startGame(primaryStage, "physics"));
 
         layout.getChildren().addAll(topicLabel, programmingButton, carsButton, physicsButton);
+
+        // Add a fade-in transition for the layout
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), layout);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+
         Scene scene = new Scene(layout, 300, 200);
         primaryStage.setScene(scene);
     }
 
-    // Step 3: Start the Game
+    /**
+     * Step 3: Starts the Hangman game.
+     *
+     * @param primaryStage the primary stage for the JavaFX application
+     * @param selectedTopic the topic chosen by the user
+     */
+
     private void startGame(Stage primaryStage, String selectedTopic) {
         this.topic = selectedTopic;
         this.selectedWord = getRandomWord(topic);
@@ -156,7 +192,12 @@ public class HangmanGame extends Application {
         primaryStage.show();
     }
 
-    // Handle Player's Guess
+    /**
+     * Handles the user's guess and updates the game state.
+     *
+     * @param guess the letter guessed by the user
+     */
+
     private void handleGuess(String guess) {
         if (guess.length() == 1 && !guessedLetters.contains(guess.charAt(0))) {
             guessedLetters.add(guess.charAt(0));
@@ -169,7 +210,7 @@ public class HangmanGame extends Application {
                     showGameOver("You win!");
                 }
             } else {
-                drawNextBodyPart();
+                drawNextBodyPartWithFade();
                 promptLabel.setText("Wrong guess! Try again.");
                 if (wrongGuesses == 6) {
                     saveGameResult(false);
@@ -180,6 +221,19 @@ public class HangmanGame extends Application {
             promptLabel.setText("Invalid input. Enter a single letter.");
         }
     }
+
+    /**
+     * Applies a fade transition to the prompt label.
+     */
+    private void applyPromptFade() {
+        FadeTransition fade = new FadeTransition(Duration.seconds(1), promptLabel);
+        fade.setFromValue(1.0);
+        fade.setToValue(0.5);
+        fade.setCycleCount(2);
+        fade.setAutoReverse(true);
+        fade.play();
+    }
+
 
     // Save Game Result to the Database
     private void saveGameResult(boolean won) {
@@ -268,7 +322,12 @@ public class HangmanGame extends Application {
         return true;
     }
 
-    // Get Random Word Based on Topic
+    /**
+     * Fetches a random word based on the selected topic.
+     *
+     * @param topic the selected topic
+     * @return a random word
+     */
     private String getRandomWord(String topic) {
         List<String> words;
         if ("programming".equals(topic)) {
@@ -293,21 +352,59 @@ public class HangmanGame extends Application {
     }
 
     // Draw the Hanging Man Progressively
-    private void drawNextBodyPart() {
+//    private void drawNextBodyPart() {
+//        if (wrongGuesses == 0) {
+//            drawingPane.getChildren().add(new Circle(200, 100, 20));
+//        } else if (wrongGuesses == 1) {
+//            drawingPane.getChildren().add(new Line(200, 120, 200, 180));
+//        } else if (wrongGuesses == 2) {
+//            drawingPane.getChildren().add(new Line(200, 140, 170, 120));
+//        } else if (wrongGuesses == 3) {
+//            drawingPane.getChildren().add(new Line(200, 140, 230, 120));
+//        } else if (wrongGuesses == 4) {
+//            drawingPane.getChildren().add(new Line(200, 180, 180, 220));
+//        } else if (wrongGuesses == 5) {
+//            drawingPane.getChildren().add(new Line(200, 180, 220, 220));
+//        }
+//        wrongGuesses++;
+//    }
+    /**
+     * Draws the next body part of the hangman with a FadeTransition.
+     */
+    private void drawNextBodyPartWithFade() {
+        Line part = null;
         if (wrongGuesses == 0) {
-            drawingPane.getChildren().add(new Circle(200, 100, 20));
+            Circle head = new Circle(200, 100, 20);
+            drawingPane.getChildren().add(head);
+            applyFadeToNode(head);
         } else if (wrongGuesses == 1) {
-            drawingPane.getChildren().add(new Line(200, 120, 200, 180));
+            part = new Line(200, 120, 200, 180); // Body
         } else if (wrongGuesses == 2) {
-            drawingPane.getChildren().add(new Line(200, 140, 170, 120));
+            part = new Line(200, 140, 170, 120); // Left arm
         } else if (wrongGuesses == 3) {
-            drawingPane.getChildren().add(new Line(200, 140, 230, 120));
+            part = new Line(200, 140, 230, 120); // Right arm
         } else if (wrongGuesses == 4) {
-            drawingPane.getChildren().add(new Line(200, 180, 180, 220));
+            part = new Line(200, 180, 180, 220); // Left leg
         } else if (wrongGuesses == 5) {
-            drawingPane.getChildren().add(new Line(200, 180, 220, 220));
+            part = new Line(200, 180, 220, 220); // Right leg
+        }
+        if (part != null) {
+            drawingPane.getChildren().add(part);
+            applyFadeToNode(part);
         }
         wrongGuesses++;
+    }
+    
+    /**
+     * Applies a fade transition to a JavaFX Node.
+     *
+     * @param node the Node to apply the fade to
+     */
+    private void applyFadeToNode(javafx.scene.Node node) {
+        FadeTransition fade = new FadeTransition(Duration.seconds(1), node);
+        fade.setFromValue(0);
+        fade.setToValue(1);
+        fade.play();
     }
 
     public static void main(String[] args) {
