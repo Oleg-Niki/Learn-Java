@@ -2,7 +2,9 @@ package hangman;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -30,6 +32,7 @@ public class HangmanGame extends Application {
     private String selectedWord; // The word to guess
     private String topic; // Chosen topic for the word
     private int wrongGuesses = 0; // Count of wrong guesses
+    private long startTime;
 
     private Pane drawingPane; // Pane for drawing the hangman
     private Label wordLabel; // Label to display the guessed word
@@ -57,7 +60,8 @@ public class HangmanGame extends Application {
         Label nameLabel = new Label("Enter your name:");
         nameLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
         TextField nameField = new TextField();
-        Button submitButton = new Button("Submit");
+        Button submitButton = new Button("LET'S GO");
+        Button leaderboardButton = new Button("View Leaderboard");
 
         // Trigger action on Enter key press
         nameField.setOnKeyPressed(event -> {
@@ -73,7 +77,10 @@ public class HangmanGame extends Application {
             }
         });
 
-        layout.getChildren().addAll(nameLabel, nameField, submitButton);
+        leaderboardButton.setOnAction(e -> showLeaderboardPopup(primaryStage));
+
+        layout.getChildren().addAll(nameLabel, nameField, submitButton, leaderboardButton);
+
 
         // Add a fade-in transition for the layout
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), layout);
@@ -81,10 +88,90 @@ public class HangmanGame extends Application {
         fadeIn.setToValue(1);
         fadeIn.play();
 
-        Scene scene = new Scene(layout, 300, 200);
+        // Ensure a new Scene is created with the new VBox
+        Scene scene = new Scene(new StackPane(layout), 300, 200);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+    // Display Leaderboard Popup
+    private void showLeaderboardPopup(Stage ownerStage) {
+        // Fetch leaderboard using the new method
+        List<String[]> leaderboard = dbConnector.getLeaderboardAsTable();
+
+        // Create a TableView
+        TableView<String[]> tableView = new TableView<>();
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        // Define columns
+        TableColumn<String[], String> playerNameCol = new TableColumn<>("Player Name");
+        playerNameCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[0]));
+        playerNameCol.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<String[], String> topicCol = new TableColumn<>("Topic");
+        topicCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[1]));
+        topicCol.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<String[], String> attemptsCol = new TableColumn<>("Attempts");
+        attemptsCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[2]));
+        attemptsCol.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<String[], String> timeCol = new TableColumn<>("Time (s)");
+        timeCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[3]));
+        timeCol.setStyle("-fx-alignment: CENTER;");
+
+        // Add columns to the table
+        tableView.getColumns().addAll(playerNameCol, topicCol, attemptsCol, timeCol);
+
+        // Add data to the table
+        leaderboard.forEach(entry -> tableView.getItems().add(entry));
+
+        // Create a layout for the popup
+        VBox popupLayout = new VBox(10);
+        popupLayout.setPadding(new Insets(20));
+        popupLayout.setStyle("-fx-background-color: lightgoldenrodyellow;");
+
+        Label header = new Label("Leaderboard");
+        header.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+
+        Button closeButton = new Button("Close");
+        closeButton.setOnAction(e -> ((Stage) closeButton.getScene().getWindow()).close());
+
+        popupLayout.getChildren().addAll(header, tableView, closeButton);
+
+        // Show the popup
+        Scene popupScene = new Scene(popupLayout, 500, 400);
+        Stage popupStage = new Stage();
+        popupStage.initOwner(ownerStage);
+        popupStage.setScene(popupScene);
+        popupStage.show();
+    }
+
+        // Create a popup window to display the leaderboard
+//        Stage popupStage = new Stage();
+//        popupStage.initOwner(ownerStage);
+//        VBox popupLayout = new VBox(10);
+//        popupLayout.setPadding(new Insets(20));
+//        popupLayout.setStyle("-fx-background-color: lightgoldenrodyellow;");
+//
+//        Label header = new Label("Leaderboard");
+//        header.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+//
+//        VBox leaderboardBox = new VBox(5);
+//        leaderboard.forEach(entry -> {
+//            Label playerLabel = new Label(entry);
+//            playerLabel.setFont(Font.font("Arial", 14));
+//            leaderboardBox.getChildren().add(playerLabel);
+//        });
+//
+//        Button closeButton = new Button("Close");
+//        closeButton.setOnAction(e -> popupStage.close());
+//
+//        popupLayout.getChildren().addAll(header, leaderboardBox, closeButton);
+//
+//        Scene popupScene = new Scene(popupLayout, 400, 400);
+//        popupStage.setScene(popupScene);
+//        popupStage.show();
+//    }
 
     /**
      * Step 2: Displays the topic selection menu.
@@ -148,6 +235,7 @@ public class HangmanGame extends Application {
     private void startGame(Stage primaryStage, String selectedTopic) {
         this.topic = selectedTopic;
         this.selectedWord = getRandomWord(topic);
+        this.startTime = System.currentTimeMillis(); // Start the timer
 
         BorderPane layout = new BorderPane();
         drawingPane = new Pane();
@@ -164,7 +252,7 @@ public class HangmanGame extends Application {
         layout.setTop(topLayout);
         layout.setCenter(drawingPane);
 
-        drawGallows();
+        drawGallows(); // Add initial gallows to the new drawingPane
 
         TextField guessField = new TextField();
         guessField.setPromptText("Enter a letter...");
@@ -185,6 +273,7 @@ public class HangmanGame extends Application {
 
         HBox inputBox = new HBox(10, guessField, submitGuessButton);
         inputBox.setPadding(new Insets(10));
+        inputBox.setAlignment(Pos.CENTER); // Center input layout
         layout.setBottom(inputBox);
 
         Scene scene = new Scene(layout, 500, 500);
@@ -206,14 +295,16 @@ public class HangmanGame extends Application {
                 updateWordLabel();
                 promptLabel.setText("Correct! Keep guessing.");
                 if (isWordGuessed()) {
-                    saveGameResult(true);
+                    long timeSpent = (System.currentTimeMillis() - startTime) / 1000; // Time in seconds
+                    saveGameResult(true, timeSpent);
                     showGameOver("You win!");
                 }
             } else {
                 drawNextBodyPartWithFade();
                 promptLabel.setText("Wrong guess! Try again.");
                 if (wrongGuesses == 6) {
-                    saveGameResult(false);
+                    long timeSpent = (System.currentTimeMillis() - startTime) / 1000; // Time in seconds
+                    saveGameResult(false, timeSpent);
                     showGameOver("You lose! The word was: " + selectedWord);
                 }
             }
@@ -236,8 +327,8 @@ public class HangmanGame extends Application {
 
 
     // Save Game Result to the Database
-    private void saveGameResult(boolean won) {
-        boolean resultSaved = dbConnector.saveGameResult(userName, topic, selectedWord, won, wrongGuesses);
+    private void saveGameResult(boolean won, long timeSpent) {
+        boolean resultSaved = dbConnector.saveGameResult(userName, topic, selectedWord, won, wrongGuesses, timeSpent);
         if (!resultSaved) {
             promptLabel.setText("Error saving game result.");
         }
@@ -245,12 +336,39 @@ public class HangmanGame extends Application {
 
     // Display Game Over Message with Results
     private void showGameOver(String message) {
-        // Fetch leaderboard from the database
-        List<String> leaderboard = dbConnector.getLeaderboard();
+        // Fetch leaderboard as a table
+        List<String[]> leaderboard = dbConnector.getLeaderboardAsTable();
 
-        // Create a popup window to display the leaderboard
-        Stage popupStage = new Stage();
+        // Create a TableView for displaying the leaderboard
+        TableView<String[]> tableView = new TableView<>();
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        // Define columns
+        TableColumn<String[], String> playerNameCol = new TableColumn<>("Player Name");
+        playerNameCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[0]));
+        playerNameCol.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<String[], String> topicCol = new TableColumn<>("Topic");
+        topicCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[1]));
+        topicCol.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<String[], String> attemptsCol = new TableColumn<>("Attempts");
+        attemptsCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[2]));
+        attemptsCol.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<String[], String> timeCol = new TableColumn<>("Time (s)");
+        timeCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[3]));
+        timeCol.setStyle("-fx-alignment: CENTER;");
+
+        // Add columns to the table
+        tableView.getColumns().addAll(playerNameCol, topicCol, attemptsCol, timeCol);
+
+        // Add data to the table
+        leaderboard.forEach(entry -> tableView.getItems().add(entry));
+
+        // Create a layout for the popup
         VBox popupLayout = new VBox(10);
+        popupLayout.setAlignment(Pos.CENTER); // Center everything in the popup
         popupLayout.setPadding(new Insets(20));
         popupLayout.setStyle("-fx-background-color: lightgoldenrodyellow;");
 
@@ -258,19 +376,9 @@ public class HangmanGame extends Application {
         header.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         header.setTextFill(Color.DARKRED);
 
-        Label leaderboardTitle = new Label("Top Players:");
-        leaderboardTitle.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-
-        VBox leaderboardBox = new VBox(5);
-        leaderboard.forEach(entry -> {
-            Label playerLabel = new Label(entry);
-            playerLabel.setFont(Font.font("Arial", 14));
-            leaderboardBox.getChildren().add(playerLabel);
-        });
-
         Button restartButton = new Button("Restart");
         restartButton.setOnAction(e -> {
-            popupStage.close();
+            ((Stage) restartButton.getScene().getWindow()).close();
             restartGame();
         });
 
@@ -278,9 +386,14 @@ public class HangmanGame extends Application {
         exitButton.setOnAction(e -> System.exit(0));
 
         HBox buttonBox = new HBox(10, restartButton, exitButton);
-        popupLayout.getChildren().addAll(header, leaderboardTitle, leaderboardBox, buttonBox);
+        buttonBox.setPadding(new Insets(10));
 
-        Scene popupScene = new Scene(popupLayout, 400, 400);
+        popupLayout.getChildren().addAll(header, tableView, buttonBox);
+
+        // Show the popup
+        Scene popupScene = new Scene(popupLayout, 500, 400);
+        Stage popupStage = new Stage();
+        popupStage.initOwner(drawingPane.getScene().getWindow());
         popupStage.setScene(popupScene);
         popupStage.show();
     }
@@ -394,7 +507,7 @@ public class HangmanGame extends Application {
         }
         wrongGuesses++;
     }
-    
+
     /**
      * Applies a fade transition to a JavaFX Node.
      *
