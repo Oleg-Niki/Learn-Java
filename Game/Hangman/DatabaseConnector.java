@@ -24,8 +24,8 @@ public class DatabaseConnector {
     }
 
     // Save a player's progress to the database
-    public boolean saveGameResult(String playerName, String topic, String word, boolean won, int attempts) {
-        String query = "INSERT INTO hangman_results (player_name, topic, word, won, attempts) VALUES (?, ?, ?, ?, ?)";
+    public boolean saveGameResult(String playerName, String topic, String word, boolean won, int attempts, long timeSpent) {
+        String query = "INSERT INTO hangman_results (player_name, topic, word, won, attempts, time_spent) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -40,6 +40,7 @@ public class DatabaseConnector {
             stmt.setString(3, word);
             stmt.setBoolean(4, won);
             stmt.setInt(5, attempts);
+            stmt.setLong(6, timeSpent);
 
             stmt.executeUpdate();
             return true;
@@ -51,10 +52,10 @@ public class DatabaseConnector {
         }
     }
 
-    // Fetch the top players for Hangman
-    public List<String> getLeaderboard() {
-        List<String> leaderboard = new ArrayList<>();
-        String query = "SELECT player_name, topic, attempts FROM hangman_results ORDER BY attempts ASC LIMIT 10";
+    // Fetch leaderboard as structured table data
+    public List<String[]> getLeaderboardAsTable() {
+        List<String[]> leaderboard = new ArrayList<>();
+        String query = "SELECT player_name, topic, attempts, time_spent FROM hangman_results ORDER BY attempts ASC, time_spent ASC LIMIT 10";
 
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
@@ -63,9 +64,9 @@ public class DatabaseConnector {
             while (rs.next()) {
                 String playerName = rs.getString("player_name");
                 String topic = rs.getString("topic");
-                int attempts = rs.getInt("attempts");
-
-                leaderboard.add(playerName + " - Topic: " + topic + " - Attempts: " + attempts);
+                String attempts = String.valueOf(rs.getInt("attempts"));
+                String timeSpent = String.valueOf(rs.getLong("time_spent"));
+                leaderboard.add(new String[]{playerName, topic, attempts, timeSpent});
             }
 
         } catch (SQLException e) {
@@ -74,12 +75,13 @@ public class DatabaseConnector {
         return leaderboard;
     }
 
-    // Display the leaderboard in the console (optional)
-    public void displayLeaderboard() {
-        List<String> leaderboard = getLeaderboard();
-        System.out.println("Top Hangman Players:");
-        for (String entry : leaderboard) {
-            System.out.println(entry);
-        }
-    }
+
+//    // Display the leaderboard in the console (optional)
+//    public void displayLeaderboard() {
+//        List<String> leaderboard = getLeaderboard();
+//        System.out.println("Top Hangman Players:");
+//        for (String entry : leaderboard) {
+//            System.out.println(entry);
+//        }
+//    }
 }
